@@ -1,0 +1,669 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://cips.cardano.org/cips/cip57/schemas/v1/plutus-type.json",
+    "$vocabulary": {
+        "https://json-schema.org/draft/2020-12/vocab/core": true,
+        "https://json-schema.org/draft/2020-12/vocab/applicator": true,
+        "https://json-schema.org/draft/2020-12/vocab/validation": true,
+        "https://cips.cardano.org/cips/cip57": true
+    },
+    "anyOf": [
+        {
+            "$ref": "#/$defs/Address"
+        },
+        {
+            "$ref": "#/$defs/AssetId"
+        },
+        {
+            "$ref": "#/$defs/AssetName"
+        },
+        {
+            "$ref": "#/$defs/Bool"
+        },
+        {
+            "$ref": "#/$defs/Certificate"
+        },
+        {
+            "$ref": "#/$defs/Credential"
+        },
+        {
+            "$ref": "#/$defs/Data"
+        },
+        {
+            "$ref": "#/$defs/Datum"
+        },
+        {
+            "$ref": "#/$defs/DatumHash"
+        },
+        {
+            "$ref": "#/$defs/DelegationCredential"
+        },
+        {
+            "$ref": "#/$defs/Ed25519Signature"
+        },
+        {
+            "$ref": "#/$defs/Ed25519SigningKey"
+        },
+        {
+            "$ref": "#/$defs/Ed25519VerificationKey"
+        },
+        {
+            "$ref": "#/$defs/Ed25519VerificationKeyHash"
+        },
+        {
+            "$ref": "#/$defs/PolicyId"
+        },
+        {
+            "$ref": "#/$defs/Rational"
+        },
+        {
+            "$ref": "#/$defs/ScriptHash"
+        },
+        {
+            "$ref": "#/$defs/ScriptPurpose"
+        },
+        {
+            "$ref": "#/$defs/StakePoolId"
+        },
+        {
+            "$ref": "#/$defs/TimeRange"
+        },
+        {
+            "$ref": "#/$defs/Transaction"
+        },
+        {
+            "$ref": "#/$defs/TransactionId"
+        },
+        {
+            "$ref": "#/$defs/TransactionInput"
+        },
+        {
+            "$ref": "#/$defs/TransactionOutput"
+        },
+        {
+            "$ref": "#/$defs/TransactionOutputReference"
+        },
+        {
+            "$ref": "#/$defs/Unit"
+        },
+        {
+            "$ref": "#/$defs/ValidatorHash"
+        },
+        {
+            "$ref": "#/$defs/Value"
+        },
+        {
+            "$ref": "#/$defs/VrfKeyHash"
+        }
+    ],
+    "$defs": {
+        "Address": {
+            "title": "Address",
+            "dataType": "constructor",
+            "index": 0,
+            "fields": [
+                {
+                    "$ref": "#/$defs/Credential"
+                },
+                {
+                    "title": "stakingCredential",
+                    "maybe": {
+                        "$ref": "#/$defs/DelegationCredential"
+                    }
+                }
+            ]
+        },
+        "AssetId": {
+            "title": "AssetId",
+            "dataType": "constructor",
+            "index": 0,
+            "fields": [
+                {
+                    "$ref": "#/$defs/PolicyId"
+                },
+                {
+                    "$ref": "#/$defs/AssetName"
+                }
+            ]
+        },
+        "AssetName": {
+            "title": "AssetName",
+            "dataType": "bytes",
+            "maxLength": 32
+        },
+        "Bool": {
+            "title": "Bool",
+            "oneOf": [
+                {
+                    "title": false,
+                    "dataType": "constructor",
+                    "index": 0,
+                    "fields": []
+                },
+                {
+                    "title": true,
+                    "dataType": "constructor",
+                    "index": 1,
+                    "fields": []
+                }
+            ]
+        },
+        "Certificate": {
+            "title": "Certificate",
+            "oneOf": [
+                {
+                    "title": "Stake Key Registration",
+                    "dataType": "constructor",
+                    "index": 0,
+                    "fields": [
+                        {
+                            "$ref": "#/$defs/DelegationCredential"
+                        }
+                    ]
+                },
+                {
+                    "title": "Stake Key Deregistration",
+                    "dataType": "constructor",
+                    "index": 1,
+                    "fields": [
+                        {
+                            "$ref": "#/$defs/DelegationCredential"
+                        }
+                    ]
+                },
+                {
+                    "title": "Stake Key Delegation",
+                    "dataType": "constructor",
+                    "index": 2,
+                    "fields": [
+                        {
+                            "title": "Delegator",
+                            "$ref": "#/$defs/DelegationCredential"
+                        },
+                        {
+                            "title": "Delegatee",
+                            "$ref": "#/$defs/StakePoolId"
+                        }
+                    ]
+                },
+                {
+                    "title": "Stake Pool Registration",
+                    "dataType": "constructor",
+                    "index": 3,
+                    "fields": [
+                        {
+                            "title": "Pool Id",
+                            "$ref": "#/$defs/StakePoolId"
+                        },
+                        {
+                            "title": "Pool VRF",
+                            "$ref": "#/$defs/VrfKeyHash"
+                        }
+                    ]
+                },
+                {
+                    "title": "Stake Pool Retirement",
+                    "dataType": "constructor",
+                    "index": 4,
+                    "fields": [
+                        {
+                            "dataType": "integer",
+                            "minimum": 0
+                        }
+                    ]
+                },
+                {
+                    "title": "Protocol Parameter Update",
+                    "dataType": "constructor",
+                    "index": 5,
+                    "fields": []
+                },
+                {
+                    "title": "Treasury Movement",
+                    "dataType": "constructor",
+                    "index": 6,
+                    "fields": []
+                }
+            ]
+        },
+        "Credential": {
+            "title": "Credential",
+            "oneOf": [
+                {
+                    "title": "Verification Key Hash",
+                    "dataType": "constructor",
+                    "index": 0,
+                    "fields": [
+                        {
+                            "$ref": "#/$defs/Ed25519VerificationKeyHash"
+                        }
+                    ]
+                },
+                {
+                    "title": "Script Hash",
+                    "dataType": "constructor",
+                    "index": 1,
+                    "fields": [
+                        {
+                            "$ref": "#/$defs/ScriptHash"
+                        }
+                    ]
+                }
+            ]
+        },
+        "Data": {
+            "title": "Data",
+            "$ref": "plutus-data.json"
+        },
+        "Datum": {
+            "title": "Datum",
+            "oneOf": [
+                {
+                    "title": "No datum",
+                    "dataType": "constructor",
+                    "index": 0,
+                    "fields": []
+                },
+                {
+                    "title": "Datum Hash",
+                    "dataType": "constructor",
+                    "index": 1,
+                    "fields": [
+                        {
+                            "$ref": "#/$defs/DatumHash"
+                        }
+                    ]
+                },
+                {
+                    "title": "Inline Datum",
+                    "dataType": "constructor",
+                    "index": 2,
+                    "fields": [
+                        {
+                            "$ref": "#/$defs/Data"
+                        }
+                    ]
+                }
+            ]
+        },
+        "DatumHash": {
+            "title": "DatumHash",
+            "dataType": "bytes",
+            "minLength": 28,
+            "maxLength": 28
+        },
+        "DelegationCredential": {
+            "title": "DelegationCredential",
+            "oneOf": [
+                {
+                    "title": "Inline Credential",
+                    "dataType": "constructor",
+                    "index": 0,
+                    "fields": [
+                        {
+                            "$ref": "#/$defs/Credential"
+                        }
+                    ]
+                },
+                {
+                    "title": "Pointer",
+                    "dataType": "constructor",
+                    "index": 1,
+                    "fields": [
+                        {
+                            "dataType": "integer",
+                            "minimum": 0
+                        },
+                        {
+                            "dataType": "integer",
+                            "minimum": 0
+                        },
+                        {
+                            "dataType": "integer",
+                            "minimum": 0
+                        }
+                    ]
+                }
+            ]
+        },
+        "Ed25519Signature": {
+            "title": "Ed25519Signature",
+            "dataType": "bytes",
+            "minLength": 64,
+            "maxLength": 64
+        },
+        "Ed25519VerificationKey": {
+            "title": "Ed25519VerificationKey",
+            "dataType": "bytes",
+            "minLength": 32,
+            "maxLength": 32
+        },
+        "Ed25519VerificationKeyHash": {
+            "title": "Ed25519VerificationKeyHash",
+            "dataType": "bytes",
+            "minLength": 28,
+            "maxLength": 28
+        },
+        "PolicyId": {
+            "title": "PolicyId",
+            "dataType": "bytes",
+            "minLength": 28,
+            "maxLength": 28
+        },
+        "Rational": {
+            "title": "Rational",
+            "oneOf": [
+                {
+                    "dataType": "constructor",
+                    "index": 0,
+                    "fields": [
+                        {
+                            "dataType": "integer"
+                        }
+                    ]
+                },
+                {
+                    "dataType": "constructor",
+                    "index": 1,
+                    "fields": [
+                        {
+                            "allOf": [
+                                {
+                                    "dataType": "integer"
+                                },
+                                {
+                                    "not": {
+                                        "dataType": "integer",
+                                        "minimum": 0,
+                                        "maximum": 0
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        "ScriptHash": {
+            "title": "ScriptHash",
+            "dataType": "bytes",
+            "minLength": 28,
+            "maxLength": 28
+        },
+        "ScriptPurpose": {
+            "title": "ScriptPurpose",
+            "oneOf": [
+                {
+                    "title": "Minting",
+                    "dataType": "constructor",
+                    "index": 0,
+                    "fields": [
+                        {
+                            "$ref": "#/$defs/PolicyId"
+                        }
+                    ]
+                },
+                {
+                    "title": "Spending",
+                    "dataType": "constructor",
+                    "index": 1,
+                    "fields": [
+                        {
+                            "$ref": "#/$defs/TransactionOutputReference"
+                        }
+                    ]
+                },
+                {
+                    "title": "Withdrawing Reward",
+                    "dataType": "constructor",
+                    "index": 2,
+                    "fields": [
+                        {
+                            "$ref": "#/$defs/DelegationCredential"
+                        }
+                    ]
+                },
+                {
+                    "title": "Certifying",
+                    "dataType": "constructor",
+                    "index": 3,
+                    "fields": [
+                        {
+                            "$ref": "#/$defs/Certificate"
+                        }
+                    ]
+                }
+            ]
+        },
+        "StakePoolId": {
+            "title": "StakePoolId",
+            "dataType": "bytes",
+            "minLength": 28,
+            "maxLength": 28
+        },
+        "TimeIntervalBound": {
+            "dataType": "constructor",
+            "index": 0,
+            "fields": [
+                {
+                    "oneof": [
+                        {
+                            "title": "Negative Infinity",
+                            "dataType": "constructor",
+                            "index": 0,
+                            "fields": []
+                        },
+                        {
+                            "title": "Finite",
+                            "dataType": "constructor",
+                            "index": 1,
+                            "fields": [
+                                {
+                                    "dataType": "integer"
+                                }
+                            ]
+                        },
+                        {
+                            "title": "Positive Infinity",
+                            "dataType": "constructor",
+                            "index": 2,
+                            "fields": []
+                        }
+                    ]
+                },
+                {
+                    "$ref": "#/$defs/Bool"
+                }
+            ]
+        },
+        "TimeRange": {
+            "title": "TimeRange",
+            "dataType": "constructor",
+            "index": 0,
+            "fields": [
+                {
+                    "title": "Lowerbound",
+                    "$ref": "#/$defs/TimeIntervalBound"
+                },
+                {
+                    "title": "UpperBound",
+                    "$ref": "#/$defs/TimeIntervalBound"
+                }
+            ]
+        },
+        "Transaction": {
+            "title": "Transaction",
+            "dataType": "constructor",
+            "index": 0,
+            "fields": [
+                {
+                    "title": "Inputs",
+                    "dataType": "list",
+                    "items": {
+                        "$ref": "#/$defs/TransactionInput"
+                    }
+                },
+                {
+                    "title": "Outputs",
+                    "dataType": "list",
+                    "items": {
+                        "$ref": "#/$defs/TransactionOutput"
+                    }
+                },
+                {
+                    "title": "Fee",
+                    "$ref": "#/$defs/Value"
+                },
+                {
+                    "title": "Mint",
+                    "$ref": "#/$defs/Value"
+                },
+                {
+                    "title": "Certificates",
+                    "dataType": "list",
+                    "items": {
+                        "$ref": "#/$defs/Certificate"
+                    }
+                },
+                {
+                    "title": "Withdrawals",
+                    "dataType": "list",
+                    "items": {
+                        "dataType": "constructor",
+                        "index": 0,
+                        "fields": [
+                            {
+                                "$ref": "#/$defs/DelegationCredential"
+                            },
+                            {
+                                "dataType": "integer",
+                                "minimum": 0
+                            }
+                        ]
+                    }
+                },
+                {
+                    "title": "Validity Range",
+                    "$ref": "#/$defs/TimeRange"
+                },
+                {
+                    "title": "Signatories",
+                    "dataType": "list",
+                    "items": {
+                        "$refs": "#/$defs/Ed25519VerificationKeyHash"
+                    }
+                },
+                {
+                    "title": "Datums",
+                    "dataType": "list",
+                    "items": {
+                        "dataType": "constructor",
+                        "index": 0,
+                        "fields": [
+                            {
+                                "$refs": "#/$defs/DatumHash"
+                            },
+                            {
+                                "$refs": "#/$defs/Data"
+                            }
+                        ]
+                    }
+                },
+                {
+                    "title": "Id",
+                    "$ref": "#/$defs/TransactionId"
+                }
+            ]
+        },
+        "TransactionId": {
+            "title": "TransactionId",
+            "dataType": "bytes",
+            "minLength": 32,
+            "maxLength": 32
+        },
+        "TransactionInput": {
+            "title": "TransactionInput",
+            "dataType": "constructor",
+            "index": 0,
+            "fields": [
+                {
+                    "$ref": "#/$defs/TransactionOutputReference"
+                },
+                {
+                    "$ref": "#/$defs/TransactionOutput"
+                }
+            ]
+        },
+        "TransactionOutput": {
+            "title": "TransactionOutput",
+            "dataType": "constructor",
+            "index": 0,
+            "fields": [
+                {
+                    "$ref": "#/$defs/Address"
+                },
+                {
+                    "$ref": "#/$defs/Value"
+                },
+                {
+                    "$ref": "#/$defs/Datum"
+                },
+                {
+                    "maybe": {
+                        "$ref": "#/$defs/ScriptHash"
+                    }
+                }
+            ]
+        },
+        "TransactionOutputReference": {
+            "title": "TransactionOutputReference",
+            "dataType": "constructor",
+            "index": 0,
+            "fields": [
+                {
+                    "$ref": "#/$defs/TransactionId"
+                },
+                {
+                    "dataType": "integer",
+                    "minimum": 0
+                }
+            ]
+        },
+        "Unit": {
+            "dataType": "constructor",
+            "index": 0,
+            "fields": []
+        },
+        "ValidatorHash": {
+            "title": "ValidatorHash",
+            "dataType": "bytes",
+            "minLength": 28,
+            "maxLength": 28
+        },
+        "Value": {
+            "title": "Value",
+            "dataType": "map",
+            "elements": [
+                {
+                    "$ref": "#/$defs/PolicyId"
+                },
+                {
+                    "dataType": "map",
+                    "elements": [
+                        {
+                            "$ref": "#/$defs/AssetName"
+                        },
+                        {
+                            "dataType": "integer"
+                        }
+                    ]
+                }
+            ]
+        },
+        "VrfKeyHash": {
+            "dataType": "bytes",
+            "minLength": 32,
+            "maxLength": 32
+        }
+    }
+}

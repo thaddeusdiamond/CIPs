@@ -1,0 +1,144 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://cips.cardano.org/cips/cip57/schemas/v1/plutus-blueprint.json",
+    "$vocabulary": {
+        "https://json-schema.org/draft/2020-12/vocab/core": true,
+        "https://json-schema.org/draft/2020-12/vocab/applicator": true,
+        "https://json-schema.org/draft/2020-12/vocab/validation": true,
+        "https://cips.cardano.org/cips/cip57": true
+    },
+    "type": "object",
+    "required": [
+        "preamble",
+        "validators"
+    ],
+    "properties": {
+        "preamble": {
+            "$ref": "#/$defs/Preamble"
+        },
+        "validators": {
+            "type": "object",
+            "additionalProperties": {
+                "$ref": "#/$defs/Validator"
+            }
+        },
+        "endpoints": {
+            "type": "object",
+            "additionalProperties": {
+                "$ref": "#/$defs/Endpoint"
+            }
+        },
+        "definitions": {
+            "type": "object",
+            "additionalProperties": true
+        }
+    },
+    "$defs": {
+        "Preamble": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+                "title",
+                "version",
+                "license"
+            ],
+            "properties": {
+                "title": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "version": {
+                    "type": "string"
+                },
+                "license": {
+                    "type": "string"
+                }
+            }
+        },
+        "Validator": {
+            "type": "object",
+            "properties": {
+                "description": {
+                    "type": "string"
+                },
+                "compiledCode": {
+                    "$ref": "#/$defs/CompiledCode"
+                },
+                "datum": {
+                    "$ref": "plutus-data.json"
+                },
+                "redeemer": {
+                    "$ref": "plutus-data.json"
+                }
+            }
+        },
+        "CompiledCode": {
+            "type": "object",
+            "properties": {
+                "template": {
+                    "type": "string",
+                    "description": "A serialised Plutus script where parameters have been templated out using simple mustache-like tags (https://mustache.github.io/mustache.5.html).\nPrograms can interpolate on the arguments and replace values (as serialised Plutus data) in parameterized compiled-code to obtain an actual\ninstantiated script. For scripts that do not have compilation arguments, the template is simply the whole static compiled script.\n",
+                    "example": "0145010000{{ foo }}2601"
+                },
+                "arguments": {
+                    "type": "object",
+                    "additionalProperties": {
+                        "$ref": "plutus-data.json"
+                    },
+                    "example": {
+                        "foo": {
+                            "type": "integer"
+                        }
+                    }
+                }
+            }
+        },
+        "Endpoint": {
+            "type": "object",
+            "additionalProperties": false,
+            "description": "An endpoint description. `from` and `to` refers to corresponding datums with which the script was locked,\nand with which the result will be locked. `via` refers to the redeemer that is used to spend the locked\nscript, also possibly null when this endpoint describes an initial transition.\n",
+            "properties": {
+                "description": {
+                    "type": "string"
+                },
+                "from": {
+                    "oneOf": [
+                        {
+                            "type": "null"
+                        },
+                        {
+                            "$ref": "plutus-data.json"
+                        }
+                    ]
+                },
+                "to": {
+                    "oneOf": [
+                        {
+                            "type": "null"
+                        },
+                        {
+                            "$ref": "plutus-data.json"
+                        }
+                    ]
+                },
+                "via": {
+                    "oneOf": [
+                        {
+                            "type": "null"
+                        },
+                        {
+                            "$ref": "plutus-data.json"
+                        }
+                    ]
+                }
+            },
+            "required": [
+                "from",
+                "to",
+                "via"
+            ]
+        }
+    }
+}
