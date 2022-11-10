@@ -2,11 +2,11 @@
 CIP: 71
 Title: Non-Fungible Token (NFT) Proxy Voting Standard
 Authors: Thaddeus Diamond <support@wildtangz.com>
-Comments-URI:
-Status: Proposed
+Comments-URI: https://github.com/cardano-foundation/CIPs/pull/351
+Status: Active
 Type: Process
 Created: 2022-10-11
-Post-History:
+Post-History: https://twitter.com/WildTangz/status/1580717895080083457
 License: CC-BY-4.0
 ---
 
@@ -29,7 +29,7 @@ We anticipate some potential use cases:
 - Creating "super-votes" based on an NFT serial number (e.g., rare NFTs in the 9,000-10,000 serial range get 2x votes)
 
 > **Warning**
-> This specification is not intended for for governance against fungible tokens that cannot be labeled individually.
+> This specification is not intended for governance against fungible tokens that cannot be labeled individually.
 
 ## Specification
 
@@ -107,9 +107,25 @@ type VoteDatum = {
 };
 ```
 
-The `voter` element is extremely important in this datum so that we know who minted the ballot NFT and who we should return it to.  At the end of the ballot counting process, this user will receive their ballot NFT back.
+The `voter` element is extremely important in this datum so that we know who minted the ballot NFT and who we should return it to.  At the end of the ballot counting process, this user will receive their ballot NFT back.  Note that we are trying to avoid being overly prescriptive here with the specific vote type as we want the only limitations on the vote type to be those imposed by Cardano (byte size).
 
-Note that we are trying to avoid being overly prescriptive here with the specific vote type as we want the only limitations on the vote type to be those imposed by Cardano.  Further iterations of this standard should discuss the potential for how to implement ranked-choice voting (RCV) inside of this `vote` object, support multiple-choice vote selection, and more.
+##### Ranked Choice Voting (RCV)
+
+Ranked choice voting is supported in this standard due to the flexibility of the "vote" datum.  We recommend a compact encoding that uses either the full text or a dictionary encoding to reduce on-chain datum size.  For example, imagine three candidates for office: "Alex Smith", "Lindsay Summer", and "Ashley Bags".  To perform ranked choice voting, each vote would encode an ordered list specifying their candidate rankings:
+
+```json
+[
+  "Lindsay Summer",
+  "Ashley Bags",
+  "Alex Smith"
+]
+```
+
+The above datum would represent #1 choice Summer, #2 choice Bags, and #3 choice Alex.
+
+##### Multiple Choice Voting
+
+Multiple choice voting should use exactly the compact encoding defined above in the RCV section, but the list is unordered.  When the off-chain ["Ballot Counter"](#Ballot-Counter---Authorized-Wallet) goes to count the vote, they will simply aggregate all the choice selections from each UTxO (honoring only the latest submission).
 
 #### "Ballot Box" -> Smart Contract
 
@@ -251,8 +267,11 @@ Due to the nature of Plutus minting policies and smart contracts, which derive p
 ## Path to Active
 
 - Considerations for ranked-choice voting if projects wish to have it
-- Minimal reference implementation making use of [Lucid](https://github.com/spacebudz/lucid) (off-chain), [Plutus Core](https://github.com/input-output-hk/plutus) [using Helios](https://github.com/Hyperion-BT/Helios) (on-chain): [Implementation](./example/)
+  - Added in the ["Ranked Choice Voting (RCV)"](#Ranked-Choice-Voting-RCV) and ["Multiple Choice Voting"](#Multiple-Choice-Voting) sections
+- Minimal reference implementation making use of [Lucid](https://github.com/spacebudz/lucid) (off-chain), [Plutus Core](https://github.com/input-output-hk/plutus) [using Helios](https://github.com/Hyperion-BT/Helios) (on-chain)
+  - See the checked-in code in [Implementation](./example/)
 - Open-source implementations from other NFT projects that make use of this CIP
+  - See the Wild Tangz example (votes held at [wildtangz.com/vote](https://wildtangz.com/vote)) open-sourced in the [voting.html](https://github.com/thaddeusdiamond/cardano-nft-mint-frontend/blob/master/src/static/html/voting.html) and [voting.js](https://github.com/thaddeusdiamond/cardano-nft-mint-frontend/blob/master/src/js/pages/voting.js) files
 
 ## References
 
